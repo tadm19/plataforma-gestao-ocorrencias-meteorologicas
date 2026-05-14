@@ -1,48 +1,88 @@
 const express = require("express");
-const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 
 const db = require("../services/db");
 
-// REGISTO
+const router = express.Router();
+
 router.post("/register", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const hash = await bcrypt.hash(password, 10);
+    if (!email || !password) {
+      return res.status(400).json({ erro: "Email e password sao obrigatorios" });
+    }
 
-  const user = {
-    id: uuidv4(),
-    email,
-    password: hash
-  };
+    const normalizedEmail = email.trim().toLowerCase();
+    const query = {
+      query: "SELECT VALUE c.id FROM c WHERE c.email = @email",
+      parameters: [{ name: "@email", value: normalizedEmail }],
+    };
 
-  await db.users.items.create(user);
+    const { resources } = await db.users.items.query(query).fetchAll();
 
-  res.sendStatus(201);
+    if (resources.length > 0) {
+      return res.status(409).json({ erro: "Email ja registado" });
+    }
+
+    const user = {
+      id: uuidv4(),
+      email: normalizedEmail,
+      password: await bcrypt.hash(password, 10),
+      createdAt: new Date().toISOString(),
+    };
+
+    await db.users.items.create(user);
+
+    res.status(201).json({ mensagem: "Utilizador criado" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao registar utilizador" });
+  }
 });
 
-// LOGIN
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const query = {
-    query: "SELECT * FROM c WHERE c.email=@e",
-    parameters: [{ name: "@e", value: email }]
-  };
+    if (!email || !password) {
+      return res.status(400).json({ erro: "Email e password sao obrigatorios" });
+    }
 
-  const { resources } = await db.users.items.query(query).fetchAll();
-  const user = resources[0];
+    const query = {
+      query: "SELECT * FROM c WHERE c.email = @email",
+      parameters: [{ name: "@email", value: email.trim().toLowerCase() }],
+    };
 
-  if (!user) return res.status(401).send("Erro");
+    const { resources } = await db.users.items.query(query).fetchAll();
+    const user = resources[0];
 
-  const ok = await bcrypt.compare(password, user.password);
-  if (!ok) return res.status(401).send("Erro");
+    if (!user) {
+      return res.status(401).json({ erro: "Credenciais invalidas" });
+    }
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) {
+      return res.status(401).json({ erro: "Credenciais invalidas" });
+    }
 
-  res.json({ token });
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ erro: "JWT_SECRET nao configurado" });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    res.json({ token, user: { id: user.id, email: user.email } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao iniciar sessao" });
+  }
 });
 
 module.exports = router;

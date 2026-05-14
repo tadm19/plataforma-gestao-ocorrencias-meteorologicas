@@ -1,13 +1,22 @@
 const { CosmosClient } = require("@azure/cosmos");
 
-const client = new CosmosClient({
-  endpoint: process.env.COSMOS_ENDPOINT,
-  key: process.env.COSMOS_KEY
+const requiredEnv = ["COSMOS_ENDPOINT", "COSMOS_KEY", "COSMOS_DATABASE"];
+
+requiredEnv.forEach((name) => {
+  if (!process.env[name]) {
+    throw new Error(`Variavel de ambiente em falta: ${name}`);
+  }
 });
 
-const db = client.database(process.env.COSMOS_DB);
+const client = new CosmosClient({
+  endpoint: process.env.COSMOS_ENDPOINT,
+  key: process.env.COSMOS_KEY,
+});
+
+const database = client.database(process.env.COSMOS_DATABASE);
 
 module.exports = {
-  users: db.container("users"),
-  ocorrencias: db.container("ocorrencias")
+  users: database.container("utilizadores"),
+  utilizadores: database.container("utilizadores"),
+  ocorrencias: database.container("ocorrencias"),
 };
