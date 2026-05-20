@@ -125,7 +125,7 @@ if (!token) {
       }
 
       setTimeout(() => {
-        window.location.href = `detalhe.html?id=${ocorrencia.id}`;
+        window.location.href = `detalhe.html?id=${encodeURIComponent(ocorrencia.id)}`;
       }, 700);
     } catch (error) {
       setMessage(error.message || "Erro ao criar ocorrencia");
