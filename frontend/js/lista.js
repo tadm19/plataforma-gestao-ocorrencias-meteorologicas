@@ -4,6 +4,16 @@ function formatLocalizacao(localizacao) {
   return localizacao.cidade || JSON.stringify(localizacao);
 }
 
+function escapeHtml(value) {
+  return String(value ?? "-").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[char]);
+}
+
 (async () => {
   const tabela = document.getElementById("tabela");
   const msg = document.getElementById("msg");
@@ -22,12 +32,12 @@ function formatLocalizacao(localizacao) {
     data.forEach((o) => {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${o.tipo || "-"}</td>
-        <td>${o.descricao || "-"}</td>
-        <td>${formatLocalizacao(o.localizacao)}</td>
-        <td>${o.prioridade || "-"}</td>
-        <td>${o.estado || "-"}</td>
-        <td><a class="btn btn-sm btn-outline-primary" href="detalhe.html?id=${o.id}">Ver</a></td>
+        <td>${escapeHtml(o.tipo)}</td>
+        <td>${escapeHtml(o.descricao)}</td>
+        <td>${escapeHtml(formatLocalizacao(o.localizacao))}</td>
+        <td>${escapeHtml(o.prioridade)}</td>
+        <td>${escapeHtml(o.estado)}</td>
+        <td><a class="btn btn-sm btn-outline-primary" href="detalhe.html?id=${encodeURIComponent(o.id)}">Ver</a></td>
       `;
       tabela.appendChild(row);
     });

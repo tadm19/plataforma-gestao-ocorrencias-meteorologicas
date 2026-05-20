@@ -1,11 +1,12 @@
 {
-  "name": "",
+  "name": "azure-function",
   "version": "1.0.0",
   "description": "",
   "main": "src/functions/*.js",
   "scripts": {
     "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "check": "node --check src/functions/arquivarOcorrencias.js",
+    "test": "npm run check"
   },
   "dependencies": {
     "@azure/cosmos": "^4.9.3",

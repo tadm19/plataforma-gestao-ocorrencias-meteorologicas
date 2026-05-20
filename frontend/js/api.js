@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://ocorrencias-backend-eah6dbh0fjh0chh8.francecentral-01.azurewebsites.net";
 
 function getToken() {
   return localStorage.getItem("token");

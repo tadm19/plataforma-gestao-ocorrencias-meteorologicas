@@ -8,7 +8,18 @@ const ocorrenciasRoutes = require("./routes/ocorrencias");
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 
 app.get("/health", (req, res) => {
