@@ -14,9 +14,10 @@ const client = new CosmosClient({
 });
 
 const database = client.database(process.env.COSMOS_DATABASE);
+const usersContainerName = process.env.COSMOS_USERS_CONTAINER || "utilizadores";
 
 module.exports = {
-  users: database.container("utilizadores"),
-  utilizadores: database.container("utilizadores"),
+  users: database.container(usersContainerName),
+  utilizadores: database.container(usersContainerName),
   ocorrencias: database.container("ocorrencias"),
 };

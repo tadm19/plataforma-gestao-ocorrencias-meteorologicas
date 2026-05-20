@@ -15,7 +15,17 @@ module.exports = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+
+    if (!decoded.id || !decoded.email) {
+      return res.status(403).json({ erro: "Token invalido" });
+    }
+
+    req.user = {
+      id: decoded.id,
+      email: decoded.email,
+      tipo: decoded.tipo === "admin" ? "admin" : "user",
+    };
+
     next();
   } catch (error) {
     res.status(403).json({ erro: "Token invalido" });

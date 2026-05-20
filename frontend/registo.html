@@ -13,13 +13,38 @@
 
   <form id="registoForm" class="mt-3 d-grid gap-3">
     <div>
+      <label class="form-label" for="nome">Nome</label>
+      <input class="form-control" id="nome" type="text" autocomplete="name" required>
+    </div>
+
+    <div>
       <label class="form-label" for="email">Email</label>
-      <input class="form-control" id="email" type="email" required>
+      <input class="form-control" id="email" type="email" autocomplete="email" required>
     </div>
 
     <div>
       <label class="form-label" for="password">Password</label>
-      <input class="form-control" id="password" type="password" minlength="6" required>
+      <input class="form-control" id="password" type="password" autocomplete="new-password" minlength="6" required>
+    </div>
+
+    <div>
+      <label class="form-label" for="confirmarPassword">Confirmar password</label>
+      <input class="form-control" id="confirmarPassword" type="password" autocomplete="new-password" minlength="6" required>
+    </div>
+
+    <div>
+      <label class="form-label" for="idade">Idade</label>
+      <input class="form-control" id="idade" type="number" min="1" max="120" required>
+    </div>
+
+    <div>
+      <label class="form-label" for="telefone">Telefone</label>
+      <input class="form-control" id="telefone" type="tel" inputmode="numeric" placeholder="912345681" required>
+    </div>
+
+    <div>
+      <label class="form-label" for="cidade">Cidade</label>
+      <input class="form-control" id="cidade" type="text" autocomplete="address-level2" required>
     </div>
 
     <button class="btn btn-primary" type="submit">Registar</button>
