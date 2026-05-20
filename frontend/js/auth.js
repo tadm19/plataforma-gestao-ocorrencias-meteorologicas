@@ -17,7 +17,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const data = await parseJsonResponse(res);
     localStorage.setItem("token", data.token);
 
-    window.location.href = "index.html";
+    window.location.href = "lista.html";
   } catch (error) {
     erro.innerText = error.message || "Login invalido";
   }

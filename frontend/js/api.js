@@ -42,7 +42,7 @@ async function parseJsonResponse(res) {
 
 function logout() {
   localStorage.removeItem("token");
-  window.location.href = "lista.html";
+  window.location.href = "index.html";
 }
 
 function escapeHtml(value) {
