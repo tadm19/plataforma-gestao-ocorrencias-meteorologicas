@@ -1,6 +1,8 @@
 {
+  "name": "frontend",
+  "private": true,
   "scripts": {
-    "start": "serve -s . -l 8080"
+    "start": "serve . -l 8080"
   },
   "dependencies": {
     "serve": "^14.2.4"
