@@ -2,7 +2,7 @@
   "name": "frontend",
   "private": true,
   "scripts": {
-    "start": "serve . -l 8080"
+    "start": "serve . -l 8080 --no-clean-urls"
   },
   "dependencies": {
     "serve": "^14.2.4"
