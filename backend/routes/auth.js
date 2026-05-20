@@ -77,7 +77,7 @@ router.post("/register", async (req, res) => {
       idade: Number(idade),
       telefone: normalizedPhone,
       cidade: cidade.trim(),
-      tipo: "user",
+      tipo: "utilizador",
       createdAt: new Date().toISOString(),
     };
 
