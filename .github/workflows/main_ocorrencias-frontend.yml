@@ -7,19 +7,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy frontend to Azure Web App
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Deploy frontend
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'Ocorrencias-Frontend'
-          slot-name: 'Production'
+          app-name: Ocorrencias-Frontend
+          slot-name: Production
           package: ./frontend
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_014B3D9596A949ECAF35BC9230317A46 }}
